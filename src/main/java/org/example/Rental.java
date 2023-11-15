@@ -12,16 +12,23 @@ public class Rental {
 
     private LocalDate endRentalDate;
 
-    public Rental(User user, Car car, LocalDate startRentalDate, LocalDate endRentalDate){
-        this.user=user;
-        this.car=car;
-        this.startRentalDate=startRentalDate;
-        this.endRentalDate=endRentalDate;
+    public Rental(User user, Car car, LocalDate startRentalDate, LocalDate endRentalDate) {
+        this.user = user;
+        this.car = car;
+        this.startRentalDate = startRentalDate;
+        this.endRentalDate = endRentalDate;
     }
 
-    public User getUser(){
+    public User getUser() {
         return user;
     }
+    public Car getCar(){
+        return car;
+    }
+    public LocalDate getStartDate(){
+        return startRentalDate;
+    }
+    public LocalDate getEndDate(){
+        return endRentalDate;
+    }
 }
-
-
