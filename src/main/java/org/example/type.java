@@ -9,6 +9,8 @@ public enum type {
         this.multiplayer = multiplayer;
     }
 
+    //dodaje komentarz do pull
+
     public double getMultiplayer(){
         return this.multiplayer;
     }
