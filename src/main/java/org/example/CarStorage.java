@@ -33,6 +33,11 @@ public class CarStorage {
         return cars;
 
     }
+
+    public void purgeList(){
+        cars.clear();
+    }
+
 /*    public void getAllCars(){
         System.out.println(Arrays.toString(listaSamochod.toArray()));
         listaSamochod.forEach(System.out::println);
