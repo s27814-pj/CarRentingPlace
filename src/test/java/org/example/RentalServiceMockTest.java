@@ -4,9 +4,13 @@ package org.example;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -14,26 +18,19 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-
-
-class RentalServiceTest {
+@ExtendWith(MockitoExtension.class)
+class RentalServiceMockTest {
+    @Mock
     private CarStorage carStorage;
+    @Mock
     private RentalStorage rentalStorage;
+    @InjectMocks
     private RentalService rentalService;
 
 
-    @BeforeEach
-    void startUp(){
-        rentalStorage = new RentalStorage();
-        carStorage = new CarStorage();
-        rentalService = new RentalService(carStorage, rentalStorage);
-    }
-
-    @AfterEach
-    void cleanup(){
-        carStorage.purgeList();
-    }
     @Test
     void shouldFindCar(){
         //GIVEN
@@ -108,11 +105,13 @@ class RentalServiceTest {
     }
 
 
-    @Test
+
+
+@Test
     void shouldGiveProperPrice(){
         //GIVEN
-        Car car = new Car("make","model","some-vin",type.PREMIUM);
-        carStorage.addCar(car);
+        Car car = new Car("make","model","ssome-vin",type.PREMIUM);
+        when(carStorage.findCarByBin(anyString())).thenReturn(Optional.of(car));
         //WHEN
         double value = rentalService.estimatePrice("some-vin", LocalDate.now(), LocalDate.now().plusDays(10));
         //THEN
@@ -120,15 +119,15 @@ class RentalServiceTest {
     }
     @Test
     void shouldRentRental(){
-    //GIVEN
+        //GIVEN
         Car car = new Car("make","model","some-vin",type.PREMIUM);
         carStorage.addCar(car);
-    //WHEN
+        //WHEN
         Rental rent = rentalService.rent("some-vin",1,LocalDate.now(),LocalDate.now().plusDays(10));
-    //THEN
-       assertThat(rent).isNotNull();
+        //THEN
+        assertThat(rent).isNotNull();
     }
-@Test
+    @Test
     void shouldNotBeAvailableStartLowerThanAllEndHigherThanAll(){
         //GIVEN
         Car car = new Car("make","model","some-vin",type.PREMIUM);
