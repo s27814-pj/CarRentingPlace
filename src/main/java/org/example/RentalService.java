@@ -1,10 +1,13 @@
 package org.example;
 
+import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RentalService {
     /*
     rentalService.rent() **3
@@ -35,19 +38,6 @@ public class RentalService {
      */
 
 
-//    private static RentalService rentalService;
-//    private RentalService(){
-//
-//    }
-//
-//    public static RentalService getInstance(){
-//        if (rentalService == null) {
-//            rentalService = new RentalService();
-//        }
-//
-//        return rentalService;
-//    }
-
     private final CarStorage carStorage;
     private final RentalStorage rentalStorage;
 
@@ -56,30 +46,17 @@ public class RentalService {
         this.rentalStorage = rentalStorage;
     }
 
-    //    public void findCar(String vin, CarStorage carStorage){
-////        for (String s : carStorage){
-////            if (s = vin){
-////                System.out.println("znalazlo");
-////            }
-////        }
-//        System.out.println(carStorage.getCars());
-//
-//    }
-    public Optional<Car> findCarByBin(String vin){
-        return carStorage.getCars().stream()
-                .filter(car-> car.getVin().equals(vin))
-                .findFirst();
-    }
+
 
     public double estimatePrice(String vin, LocalDate startDate, LocalDate endDate){
 
-        Car carByVin = findCarByBin(vin).orElseThrow();
+        Car carByVin = carStorage.findCarByBin(vin).orElseThrow();
         long days = Duration.between(startDate.atStartOfDay(), endDate.atStartOfDay()).toDays();
 
         return days * 500 * carByVin.getType().getMultiplayer();
     }
     public Rental rent(String vin, int userId, LocalDate startDate, LocalDate endDate){
-        Car carByVin = findCarByBin(vin).orElseThrow();
+        Car carByVin = carStorage.findCarByBin(vin).orElseThrow();
         if (isAvailable(vin, startDate, endDate)){
             Rental rental = new Rental(new User(userId), carByVin, startDate, endDate);
             rentalStorage.addRental(rental);
@@ -90,7 +67,7 @@ public class RentalService {
     }
     public boolean isAvailable (String vin, LocalDate startDate, LocalDate endDate){
         //if (findCarByBin(vin).isEmpty()) return false;
-        boolean carDoesNotExist = findCarByBin(vin).isEmpty();
+        boolean carDoesNotExist = carStorage.findCarByBin(vin).isEmpty();
         if (carDoesNotExist){
             return false;
         }
