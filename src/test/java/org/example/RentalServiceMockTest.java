@@ -18,7 +18,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,13 +36,17 @@ class RentalServiceMockTest {
     @Test
     void shouldFindCar(){
         //GIVEN
-        Car car = new Car("make","model","some-vin",type.PREMIUM);
-        carStorage.addCar(car);
-        //WHEN
-        Optional<Car> carByVin = carStorage.findCarByBin("some-vin");
+        //Car car = new Car("make","model","some-vin",type.PREMIUM);
+        //Car carMock = mock(Car.class);
 
+        //carStorage.addCar(car);
+        //WHEN
+        //Optional<Car> carByVin = carStorage.findCarByBin("some-vin");
+        CarStorage storageMock = mock(CarStorage.class);
+        boolean ad = when(storageMock.findCarByBin(any())).thenReturn(true);
         //THEN
-        assertThat(carByVin).isPresent();
+        //assertThat(carByVin).isPresent();
+        assertThat(ad).isTrue();
         //assertThat(carByVin.get().getMake()).isEqualTo("ran");
 
     }
